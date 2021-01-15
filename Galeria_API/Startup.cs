@@ -15,6 +15,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using System.Text;
+using AutoMapper;
+using Galeria_API.Mapping;
 
 namespace Galeria_API
 {
@@ -86,6 +88,10 @@ namespace Galeria_API
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IRepository, Repository>();
+
+            var mapperConfiguration = new MapperConfiguration(options => { options.AddProfile(new MappingProfile()); });
+            var mapper = mapperConfiguration.CreateMapper();
+            services.AddSingleton(mapper);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -47,14 +47,19 @@ namespace Galeria_API.Controllers
                 await file.CopyToAsync(fileStream);
             }
 
-            var pic = new Picture() { Path = filePath, OwnerUserId = userId};
+            var pic = new Picture()
+            {
+                Path = filePath,
+                Name = Path.GetFileNameWithoutExtension(file.FileName),
+                OwnerUserId = userId
+            };
             user.Pictures.Add(pic);
             await _unitOfWork.CompleteAsync();
             
             return CreatedAtRoute("GetPicture",new {Controller = "Pictures", id = pic.Id}, pic);
         }
 
-        [HttpGet]
+        [HttpGet(Name = "GetPicture")]
         [Route("api/[controller]/{id}")]
         [Authorize(Policy = Constants.PolicyNameUploadingDownloading)]
         public async Task<IActionResult> GetPicture(int id)

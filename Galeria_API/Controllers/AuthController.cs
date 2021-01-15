@@ -67,7 +67,8 @@ namespace Galeria_API.Controllers
 
             if (identityResult.Succeeded)
             {
-                return CreatedAtRoute("GetUser", new {Controller = "Users", id = userApp.Id}, userApp);
+                var userToReturn = _mapper.Map<UserForListDto>(userApp);
+                return CreatedAtRoute("GetUser", new {Controller = "Users", id = userApp.Id}, userToReturn);
             }
 
             return BadRequest(identityResult.Errors);

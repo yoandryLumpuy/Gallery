@@ -10,6 +10,7 @@ namespace Galeria_API.Mapping
         {
             //from Dtos to Domain Model 
             CreateMap<UserForListDto, User>();
+            CreateMap<UserForLoginDto, User>();
 
 
             //from Domain Model t0 Dtos
