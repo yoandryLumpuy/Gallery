@@ -1,0 +1,21 @@
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+  <a class="navbar-brand" href="#">Gallery</a>
+  <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Home </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Admin</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Link</a>
+      </li>  
+    </ul>
+    <form class="form-inline my-2 my-lg-0" (ngSubmit) = "login()">
+      <input class="form-control mr-sm-2" name ="username" type="text" [(ngModel)] = "model.userName" placeholder="UserName" >
+      <input class="form-control mr-sm-2" type="text" name = "password" [(ngModel)] = "model.password" placeholder="Password" >
+      <button class="btn btn-success my-2 my-sm-0" type="submit">Login</button>
+    </form >
+  </div>
+</nav>

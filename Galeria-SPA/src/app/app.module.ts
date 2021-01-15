@@ -4,14 +4,22 @@ import { HttpClientModule } from '@angular/common/http';
 
 
 import { AppComponent } from './app.component';
+import { PictureCardComponent } from './Components/picture-card/picture-card.component';
+import { PicturesListComponent } from './Components/pictures-list/pictures-list.component';
+import { NavBarComponent } from './Components/navBar/navBar.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
+  declarations: [				
+    AppComponent,
+      PictureCardComponent,
+      PicturesListComponent,
+      NavBarComponent
+   ],
   imports: [
     BrowserModule, 
-    HttpClientModule
+    HttpClientModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
