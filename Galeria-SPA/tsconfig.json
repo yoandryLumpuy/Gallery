@@ -15,6 +15,9 @@
     "moduleResolution": "node",
     "importHelpers": true,
     "target": "es2015",
+    "typeRoots":[
+      "src/typings.d.ts"
+    ],
     "module": "es2020",
     "lib": [
       "es2018",

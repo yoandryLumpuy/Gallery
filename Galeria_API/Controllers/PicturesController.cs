@@ -30,8 +30,7 @@ namespace Galeria_API.Controllers
             _unitOfWork = unitOfWork;
         }
 
-        [HttpPost]
-        [Route("api/user/{userId}/pictures")]
+        [HttpPost("api/user/{userId}/pictures")]
         [Authorize(Policy = Constants.PolicyNameUploadingDownloading)]
         public async Task<IActionResult> UploadPicture(int userId, [FromHeader]IFormFile file)
 
@@ -59,8 +58,7 @@ namespace Galeria_API.Controllers
             return CreatedAtRoute("GetPicture",new {Controller = "Pictures", id = pic.Id}, pic);
         }
 
-        [HttpGet(Name = "GetPicture")]
-        [Route("api/[controller]/{id}")]
+        [HttpGet("api/pictures/{id}", Name = "GetPicture")]
         [Authorize(Policy = Constants.PolicyNameUploadingDownloading)]
         public async Task<IActionResult> GetPicture(int id)
         {

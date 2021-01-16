@@ -7,15 +7,35 @@
       </li>
       <li class="nav-item">
         <a class="nav-link" href="#">Admin</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Link</a>
-      </li>  
+      </li> 
     </ul>
-    <form class="form-inline my-2 my-lg-0" (ngSubmit) = "login()">
-      <input class="form-control mr-sm-2" name ="username" type="text" [(ngModel)] = "model.userName" placeholder="UserName" >
-      <input class="form-control mr-sm-2" type="text" name = "password" [(ngModel)] = "model.password" placeholder="Password" >
+    <form *ngIf="!authService.loggedIn" class="form-inline my-2 my-lg-0" (ngSubmit) = "login()">
+      <input class="form-control mr-sm-2" name ="username" type="text" [(ngModel)] = "model.userName" placeholder="User" >
+      <input class="form-control mr-sm-2" type="password" name = "password" [(ngModel)] = "model.password" placeholder="Password" >
       <button class="btn btn-success my-2 my-sm-0" type="submit">Login</button>
+      <button class="btn btn-default my-2 my-sm-0 pl-2" type="button" (click) = "register()">Register</button>
     </form >
   </div>
+
+  <div *ngIf="authService.loggedIn" class="btn-group" dropdown>
+    <button id="button-basic" dropdownToggle type="button" class="btn btn-primary dropdown-toggle"
+            aria-controls="dropdown-basic">
+      Welcome {{authService.decodedToken.unique_name | titlecase}} <span class="caret"></span>
+    </button>
+    <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu"
+        role="menu" aria-labelledby="button-basic">
+      <li role="menuitem"><a class="dropdown-item" href="#">
+        <span> 
+          <i class="fa fa-user-circle"></i>          
+        </span>
+        Edit Profile
+      </a></li>
+      <li class="divider dropdown-divider"></li>
+      <li role="menuitem"><a class="dropdown-item" href="#">
+        <span> 
+          <i class="fa fa-sign-out"></i>          
+        </span>
+      Logout</a> </li>
+    </ul>
+  </div>  
 </nav>
