@@ -12,6 +12,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Galeria_API.Extensions;
 
 namespace Galeria_API.Controllers
 {
@@ -47,7 +48,7 @@ namespace Galeria_API.Controllers
 
             var signInResult = await _signInManager.CheckPasswordSignInAsync(user, userForLoginDto.Password, false);
 
-            if (!signInResult.Succeeded) return Unauthorized();
+            if (!signInResult.Succeeded) return Unauthorized("Wrong password!. Try again.");
 
             var userToListDto = _mapper.Map<UserForListDto>(user);
             return Ok(new
@@ -67,6 +68,7 @@ namespace Galeria_API.Controllers
 
             if (identityResult.Succeeded)
             {
+                await _userManager.AddToRoleAsync(userApp, Constants.RoleNameNormalUser);
                 var userToReturn = _mapper.Map<UserForListDto>(userApp);
                 return CreatedAtRoute("GetUser", new {Controller = "Users", id = userApp.Id}, userToReturn);
             }

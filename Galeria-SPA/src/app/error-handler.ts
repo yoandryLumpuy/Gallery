@@ -18,5 +18,6 @@ export class MyErrorHandler implements ErrorHandler {
             errorsSummary += error.error;                  
         }        
         this.alertify.error(errorsSummary || 'An error has occured !');
+        console.log(error);
     }
 }

@@ -5,11 +5,11 @@
       <li class="nav-item active">
         <a class="nav-link" href="#">Home </a>
       </li>
-      <li class="nav-item">
+      <li *userWithRoles = "['Admin']"  class="nav-item">
         <a class="nav-link" href="#">Admin</a>
       </li> 
     </ul>
-    <form *ngIf="!authService.loggedIn" class="form-inline my-2 my-lg-0" (ngSubmit) = "login()">
+    <form *ngIf="!(authService.user | async)" class="form-inline my-2 my-lg-0" (ngSubmit) = "login()">
       <input class="form-control mr-sm-2" name ="username" type="text" [(ngModel)] = "model.userName" placeholder="User" >
       <input class="form-control mr-sm-2" type="password" name = "password" [(ngModel)] = "model.password" placeholder="Password" >
       <button class="btn btn-success my-2 my-sm-0" type="submit">Login</button>
@@ -17,7 +17,7 @@
     </form >
   </div>
 
-  <div *ngIf="authService.loggedIn" class="btn-group" dropdown>
+  <div *ngIf="!!(authService.user | async)" class="btn-group" dropdown>
     <button id="button-basic" dropdownToggle type="button" class="btn btn-primary dropdown-toggle"
             aria-controls="dropdown-basic">
       Welcome {{authService.decodedToken.unique_name | titlecase}} <span class="caret"></span>
@@ -31,7 +31,7 @@
         Edit Profile
       </a></li>
       <li class="divider dropdown-divider"></li>
-      <li role="menuitem"><a class="dropdown-item" href="#">
+      <li role="menuitem"><a class="dropdown-item" (click) = "logout()" href="#">
         <span> 
           <i class="fa fa-sign-out"></i>          
         </span>

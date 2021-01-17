@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Linq;
+using AutoMapper;
 using Galeria_API.Core.Model;
 using Galeria_API.DataTransferObjects;
 
@@ -13,8 +14,10 @@ namespace Galeria_API.Mapping
             CreateMap<UserForLoginDto, User>();
 
 
-            //from Domain Model t0 Dtos
-            CreateMap<User, UserForListDto>();
+            //from Domain Model to Dtos
+            CreateMap<User, UserForListDto>()
+                .ForMember(userDto => userDto.Roles, 
+                    memberOptions => memberOptions.MapFrom(user => user.UserRoles.Select(userRole => userRole.Role.Name).ToArray()));
         }
     }
 }
