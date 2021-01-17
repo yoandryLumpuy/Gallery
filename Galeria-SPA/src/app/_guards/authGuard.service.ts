@@ -2,7 +2,6 @@ import { AuthService } from './../_services/auth.service';
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
-import { routes } from '../myRoutes.routing';
 import { AlertifyService } from '../_services/alertify.service';
 
 @Injectable({
