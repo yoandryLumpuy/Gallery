@@ -4,3 +4,12 @@
 @import '../node_modules/font-awesome/css/font-awesome.css';
 @import '../node_modules/alertifyjs/build/css/alertify.css';
 @import '../node_modules/alertifyjs/build/css/themes/bootstrap.css';
+
+.navbar {
+    position: fixed; /* Set the navbar to fixed position */
+    top: 0; /* Position the navbar at the top of the page */
+    width: 100%; /* Full width */
+    z-index: 9999;
+  }
+
+

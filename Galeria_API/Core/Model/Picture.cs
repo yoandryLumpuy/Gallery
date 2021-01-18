@@ -12,6 +12,7 @@ namespace Galeria_API.Core.Model
         public string Path { get; set; }
         public virtual User OwnerUser { get; set; }
         public virtual int OwnerUserId { get; set; }
+        public DateTime UploadedDateTime { get; set; }
 
         public virtual ICollection<UserLikesPicture> UserLikes { get; set; }
         public virtual ICollection<PointOfView> PointsOfView{ get; set; }

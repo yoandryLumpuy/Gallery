@@ -2,3 +2,7 @@
     cursor: pointer
 };
 
+.navbar{
+    z-index: 9999;
+}
+

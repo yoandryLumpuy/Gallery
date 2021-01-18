@@ -50,7 +50,8 @@ namespace Galeria_API.Controllers
             {
                 Path = filePath,
                 Name = Path.GetFileNameWithoutExtension(file.FileName),
-                OwnerUserId = userId
+                OwnerUserId = userId,
+                UploadedDateTime = DateTime.Now
             };
             user.Pictures.Add(pic);
             await _unitOfWork.CompleteAsync();

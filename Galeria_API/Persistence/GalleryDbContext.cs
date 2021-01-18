@@ -41,6 +41,9 @@ namespace Galeria_API.Persistence
             builder.Entity<Picture>()
                 .Property(pic => pic.Name)
                 .IsRequired();
+            builder.Entity<Picture>()
+                .Property(pic => pic.UploadedDateTime)
+                .IsRequired();
 
             builder.Entity<Picture>()
                 .HasOne(picture => picture.OwnerUser)
