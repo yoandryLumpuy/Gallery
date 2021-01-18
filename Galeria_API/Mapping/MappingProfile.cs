@@ -18,6 +18,8 @@ namespace Galeria_API.Mapping
             CreateMap<User, UserForListDto>()
                 .ForMember(userDto => userDto.Roles, 
                     memberOptions => memberOptions.MapFrom(user => user.UserRoles.Select(userRole => userRole.Role.Name).ToArray()));
+            CreateMap<Picture, PicturesDto>();
+            CreateMap<PaginationResult<Picture>, PaginationResult<PicturesDto>>();
         }
     }
 }

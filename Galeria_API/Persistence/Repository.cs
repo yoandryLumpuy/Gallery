@@ -30,7 +30,7 @@ namespace Galeria_API.Persistence
             return await _galleryDbContext.Pictures.SingleOrDefaultAsync(pic => pic.Id == id);
         }
 
-        public async Task<PagedList<Picture>> GetPictures(QueryObject queryObject)
+        public async Task<PaginationResult<Picture>> GetPictures(QueryObject queryObject)
         {
             var query = _galleryDbContext.Pictures.AsQueryable();
 
@@ -47,7 +47,7 @@ namespace Galeria_API.Persistence
                         : query.OrderByDescending(pic => pic.UploadedDateTime);
             }
 
-            return await PagedList<Picture>.CreateAsync(query, queryObject.Page, queryObject.PageSize);
+            return await PaginationResult<Picture>.CreateAsync(query, queryObject.Page, queryObject.PageSize);
         }
     }
 }

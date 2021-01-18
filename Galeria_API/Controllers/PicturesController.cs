@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Galeria_API.Core;
 using Galeria_API.Core.Model;
+using Galeria_API.DataTransferObjects;
 using Galeria_API.Extensions;
 using Galeria_API.Persistence;
 using Microsoft.AspNetCore.Authorization;
@@ -13,6 +15,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.Extensions.Options;
 
 namespace Galeria_API.Controllers
 {
@@ -22,17 +25,22 @@ namespace Galeria_API.Controllers
         private readonly IRepository _repository;
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
+        private readonly IOptionsSnapshot<PictureSettings> _pictureSetting;
 
-        public PicturesController(IRepository repository, IHostingEnvironment hostingEnvironment, IUnitOfWork unitOfWork)
+        public PicturesController(IRepository repository, IHostingEnvironment hostingEnvironment, 
+            IUnitOfWork unitOfWork, IMapper mapper, IOptionsSnapshot<PictureSettings> pictureSetting)
         {
             _repository = repository;
             _hostingEnvironment = hostingEnvironment;
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
+            _pictureSetting = pictureSetting;
         }
 
         [HttpPost("api/user/{userId}/pictures")]
         [Authorize(Policy = Constants.PolicyNameUploadingDownloading)]
-        public async Task<IActionResult> UploadPicture(int userId, [FromHeader]IFormFile file)
+        public async Task<IActionResult> UploadPicture(int userId, IFormFile file)
 
         {
             var user = await _repository.GetUser(userId);
@@ -41,6 +49,12 @@ namespace Galeria_API.Controllers
             var directory = Path.Combine(_hostingEnvironment.WebRootPath, "uploads");
             if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
             var filePath = Path.Combine(directory, Guid.NewGuid().ToString() + Path.GetExtension(file.FileName));
+
+            if (file == null) return BadRequest("Null file!");
+            if (file.Length == 0) return BadRequest("Empty file");
+            if (file.Length > _pictureSetting.Value.MaxBytes) return BadRequest("File size exceeded!");
+            if (_pictureSetting.Value.IsSupported(Path.GetExtension(file.FileName))) return BadRequest("Unsupported file extension!");
+
             using (var fileStream = new FileStream(filePath, FileMode.Create))
             {
                 await file.CopyToAsync(fileStream);
@@ -55,8 +69,10 @@ namespace Galeria_API.Controllers
             };
             user.Pictures.Add(pic);
             await _unitOfWork.CompleteAsync();
-            
-            return CreatedAtRoute("GetPicture",new {Controller = "Pictures", id = pic.Id}, pic);
+
+            var pictureDto = _mapper.Map<PicturesDto>(pic);
+
+            return CreatedAtRoute("GetPicture",new {Controller = "Pictures", id = pic.Id}, pictureDto);
         }
 
         [HttpGet("api/pictures/{id}", Name = "GetPicture")]
@@ -79,6 +95,15 @@ namespace Galeria_API.Controllers
             string outStringContentType;
             new FileExtensionContentTypeProvider().TryGetContentType(Path.GetFileName(pic.Path), out outStringContentType);
             return File(memoryStream, outStringContentType ?? "application/octet-stream", pic.Name + Path.GetExtension(pic.Path));
+        }
+
+
+        [HttpGet("api/pictures", Name = "GetPictures")]
+        [Authorize(Policy = Constants.PolicyNameUploadingDownloading)]
+        public async Task<IActionResult> GetPictures([FromQuery]QueryObject queryObject)
+        {
+            var picturesFromDbContext =  await _repository.GetPictures(queryObject);
+            return Ok(_mapper.Map<PaginationResult<PicturesDto>>(picturesFromDbContext));
         }
     }
 }

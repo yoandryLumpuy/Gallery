@@ -92,6 +92,8 @@ namespace Galeria_API
             var mapperConfiguration = new MapperConfiguration(options => { options.AddProfile(new MappingProfile()); });
             var mapper = mapperConfiguration.CreateMapper();
             services.AddSingleton(mapper);
+
+            services.Configure<PictureSettings>(Configuration.GetSection("PictureSettings"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
