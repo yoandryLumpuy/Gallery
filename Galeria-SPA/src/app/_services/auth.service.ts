@@ -21,6 +21,10 @@ export class AuthService {
     return !!token && !this.helper.isTokenExpired(token);
   }
 
+  get token(): string | null{    
+      return this.loggedIn ? localStorage.getItem('token') : null;
+  }
+
   get decodedToken(){
     var token = localStorage.getItem('token');
     if (token) {
