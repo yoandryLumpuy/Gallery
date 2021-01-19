@@ -23,7 +23,7 @@ pictures(page: number, pageSize : number, sortBy? : string,
   if (!!sortBy) queryObject.sortBy = sortBy;
   if (!!isSortAscending) queryObject.isSortAscending = isSortAscending;
             
-  return this.http.get<PaginationResult<Picture>>(environment.baseUrl + "api/pictures?"+ this.queryObjectToString(queryObject));
+  return this.http.get<PaginationResult<Picture>>(environment.baseUrl + "pictures?"+ this.queryObjectToString(queryObject));
 }
 
 queryObjectToString(queryObject : any) : string{

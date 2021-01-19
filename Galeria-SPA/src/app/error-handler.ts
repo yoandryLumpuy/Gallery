@@ -17,7 +17,6 @@ export class MyErrorHandler implements ErrorHandler {
            if (typeof(error.error) == 'string') 
             errorsSummary += error.error;                  
         }        
-        this.alertify.error(errorsSummary || 'An error has occured !');
-        console.log(error);
+        this.alertify.error(errorsSummary || error.error?.statusText || 'An error has occured !');
     }
 }
