@@ -1,25 +1,43 @@
+import { QueryObject } from './../../_model/queryObject.interface';
 import { PicturesService } from './../../_services/Pictures.service';
 import { Picture } from './../../_model/picture.interface';
 import { PaginationResult } from './../../_model/paginationResult.interface';
-import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-Home',
   templateUrl: './Home.component.html',
-  styleUrls: ['./Home.component.scss']
+  styleUrls: ['./Home.component.css']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   paginationResult : PaginationResult<Picture>;
-  constructor(private http: HttpClient, private picturesService: PicturesService) { }
+  queryObject : QueryObject = {
+    page: 1,
+    pageSize: 5,
+    sortBy: 'UpdatedDateTime',
+    isSortAscending: false
+  };
+  subscription: Subscription;
 
-  ngOnInit() {
-    this.picturesService.pictures(1,10).subscribe(
-      res => {        
-        this.paginationResult = res;
-        console.log(res);
-      }        
-    );
+  constructor(private picturesService: PicturesService) { }
+
+  ngOnDestroy(): void {
+    if (!!this.subscription) this.subscription.unsubscribe();
   }
 
+  ngOnInit() {
+    this.getPictures();
+  }
+
+  pageChanged($event: number){
+    this.queryObject.page = $event;
+    this.getPictures();
+  }
+
+  getPictures(){
+    if (!!this.subscription) this.subscription.unsubscribe();
+    this.picturesService.pictures(this.queryObject).subscribe(
+      res => this.paginationResult = res);
+  }
 }

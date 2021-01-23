@@ -1,6 +1,5 @@
 import { AuthService } from './_services/auth.service';
-import { AuthGuardService } from './_guards/authGuard.service';
-import { AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, NgZone, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-root',

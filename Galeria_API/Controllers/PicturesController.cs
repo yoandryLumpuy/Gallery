@@ -75,8 +75,8 @@ namespace Galeria_API.Controllers
             return CreatedAtRoute("GetPicture",new {Controller = "Pictures", id = pic.Id}, pictureDto);
         }
 
+        [AllowAnonymous]
         [HttpGet("api/pictures/{id}", Name = "GetPicture")]
-        [Authorize(Policy = Constants.PolicyNameUploadingDownloading)]
         public async Task<IActionResult> GetPicture(int id)
         {
             var pic = await _repository.GetPicture(id);
@@ -97,9 +97,8 @@ namespace Galeria_API.Controllers
             return File(memoryStream, outStringContentType ?? "application/octet-stream", pic.Name + Path.GetExtension(pic.Path));
         }
 
-
+        [AllowAnonymous]
         [HttpGet("api/pictures", Name = "GetPictures")]
-        [Authorize(Policy = Constants.PolicyNameUploadingDownloading)]
         public async Task<IActionResult> GetPictures([FromQuery]QueryObject queryObject)
         {
             var picturesFromDbContext =  await _repository.GetPictures(queryObject);

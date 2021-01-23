@@ -1,12 +1,10 @@
 import { AdminListOfUsersComponent } from './_components/AdminListOfUsers/AdminListOfUsers.component';
 import { HomeComponent } from './_components/Home/Home.component';
-import { RouterModule } from '@angular/router';
 import { MyErrorHandler } from './error-handler';
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { FormsModule} from '@angular/forms';
 import { AppComponent } from './app.component';
 import { PictureCardComponent } from './_components/picture-card/picture-card.component';
@@ -15,6 +13,17 @@ import { NavBarComponent } from './_components/navBar/navBar.component';
 import { UserWithRolesDirective } from './_directives/userWithRoles.directive';
 import { appRoutingModule } from './app-routing.module';
 import { AuthInterceptorService } from './_services/authInterceptor.service';
+import { PaginatorComponent } from './_components/pagination/pagination.component';
+
+import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatIconModule} from '@angular/material/icon';
+import {MatInputModule} from '@angular/material/input';
+import {MatButtonModule} from '@angular/material/button';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatTableModule} from '@angular/material/table';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatPaginatorModule} from '@angular/material/paginator';
+
 
 @NgModule({
   declarations: [				
@@ -24,15 +33,23 @@ import { AuthInterceptorService } from './_services/authInterceptor.service';
       NavBarComponent,
       UserWithRolesDirective,
       HomeComponent,
-      AdminListOfUsersComponent
+      AdminListOfUsersComponent, 
+      PaginatorComponent 
    ],
   imports: [
     BrowserModule, 
     HttpClientModule,
     FormsModule,
     BrowserAnimationsModule,
-    BsDropdownModule.forRoot(),
-    appRoutingModule
+    appRoutingModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatInputModule,
+    MatButtonModule,
+    MatMenuModule,
+    MatTableModule,
+    MatProgressSpinnerModule,
+    MatPaginatorModule
   ],
   providers: [
     {provide: ErrorHandler, useClass: MyErrorHandler},

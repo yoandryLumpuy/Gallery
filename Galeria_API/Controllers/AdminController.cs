@@ -23,9 +23,9 @@ namespace Galeria_API.Controllers
             _userManager = userManager;
         }
 
-        [HttpGet("availableRoles")]
+        [HttpGet("roles")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetAvailableRoles()
+        public IActionResult GetAvailableRoles()
         {
             return Ok(new List<string>
             {

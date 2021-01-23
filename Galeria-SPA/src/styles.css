@@ -1,15 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
-@import '../node_modules/bootstrap/dist/css/bootstrap.css';
-@import '../node_modules/bootswatch/dist/lumen/bootstrap.css';
-@import '../node_modules/font-awesome/css/font-awesome.css';
-@import '../node_modules/alertifyjs/build/css/alertify.css';
-@import '../node_modules/alertifyjs/build/css/themes/bootstrap.css';
+@import "./../node_modules/@angular/material/prebuilt-themes/indigo-pink.css";
 
-.navbar {
-    position: fixed; /* Set the navbar to fixed position */
-    top: 0; /* Position the navbar at the top of the page */
-    width: 100%; /* Full width */
-    z-index: 9999;
-  }
-
-
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

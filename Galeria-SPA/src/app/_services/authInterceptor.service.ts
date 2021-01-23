@@ -1,9 +1,7 @@
 import { AuthService } from './auth.service';
-import { HttpEvent, HttpHandler, HttpHeaders, HttpInterceptor, HttpParams, HttpRequest } from '@angular/common/http';
+import { HttpEvent, HttpHandler, HttpHeaders, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { exhaustMap, switchMap, take } from 'rxjs/operators';
-import { collectExternalReferences } from '@angular/compiler';
 
 @Injectable({
   providedIn: 'root'

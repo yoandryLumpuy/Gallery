@@ -5,6 +5,7 @@ import { JwtHelperService } from "@auth0/angular-jwt";
 import { environment } from './../../environments/environment';
 import {switchMap, tap} from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ export class AuthService {
   user : Subject<User> = new Subject<User>();
   timeoutTimer : any;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
   get loggedIn() : boolean{
     var token = localStorage.getItem('token');
@@ -53,6 +54,7 @@ export class AuthService {
     this.user.next(undefined);
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    this.router.navigate(['/']);
     if (!!this.timeoutTimer) clearTimeout(this.timeoutTimer);
   }
 
@@ -82,7 +84,6 @@ export class AuthService {
   }
 
   matchRoles(roles: string[] = []) : boolean{
-    var thereIsMatch = false;
     var decodedToken = this.decodedToken;
 
     if (!decodedToken) return false;

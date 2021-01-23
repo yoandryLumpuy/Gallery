@@ -13,16 +13,7 @@ export class PicturesService {
 
 constructor(private http : HttpClient) { }
 
-pictures(page: number, pageSize : number, sortBy? : string,
-         isSortAscending?: boolean, userId? : number) : Observable<PaginationResult<Picture>>{
-  var queryObject : QueryObject = {
-    page,
-    pageSize    
-  }; 
-  if (!!userId) queryObject.userId = userId; 
-  if (!!sortBy) queryObject.sortBy = sortBy;
-  if (!!isSortAscending) queryObject.isSortAscending = isSortAscending;
-            
+pictures(queryObject: QueryObject) : Observable<PaginationResult<Picture>>{              
   return this.http.get<PaginationResult<Picture>>(environment.baseUrl + "pictures?"+ this.queryObjectToString(queryObject));
 }
 
