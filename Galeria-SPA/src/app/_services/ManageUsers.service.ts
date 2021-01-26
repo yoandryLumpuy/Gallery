@@ -1,3 +1,4 @@
+import { PaginationResult } from './../_model/paginationResult.interface';
 import { environment } from './../../environments/environment';
 import { Observable } from 'rxjs';
 import { User } from './../_model/user.interface';
@@ -11,8 +12,8 @@ export class ManageUsersService {
 
 constructor(private http: HttpClient) { }
 
-getUsers(): Observable<User[]>{
-  return this.http.get<User[]>(environment.baseUrl + 'users');
+getUsers(): Observable<PaginationResult<User>>{
+  return this.http.get<PaginationResult<User>>(environment.baseUrl + 'users');
 } 
 
 getUser(id: number): Observable<User>{
@@ -25,5 +26,13 @@ updateRoles(userName : string, roles: string[]){
 
 getAvailableRoles(): Observable<string[]>{
   return this.http.get<string[]>(environment.baseUrl + 'admin/roles');
+}
+
+getUrlForUserPhoto(userId : number): string{
+  return environment.baseUrl + 'users/' + userId.toString() + '/photo';
+}
+
+uploadProfilePhoto(userId : number){
+  // var url = 
 }
 }

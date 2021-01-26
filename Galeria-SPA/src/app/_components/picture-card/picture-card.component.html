@@ -1,0 +1,21 @@
+<mat-card class="example-card">
+    <mat-card-header>
+      <div mat-card-avatar class="example-header-image"
+       ></div>
+      <mat-card-title>Shiba Inu</mat-card-title>
+      <mat-card-subtitle>Dog Breed</mat-card-subtitle>
+    </mat-card-header>
+    <img mat-card-image src="{{picturesService.getPictureUrlById(picture.id)}}" alt="{{'Picture #'+ picture.id}}}">
+    <mat-card-content>
+      <p><strong> Uploaded In: </strong> {{picture.uploadedDateTime | date:'medium'}}</p>
+      <p><strong> Top Comments: </strong></p>
+      <ul>
+        <li *ngFor="let pointOfView of picture.topPointsOfView"><i>{{pointOfView.userName}}:</i> {{pointOfView.comment}}</li>        
+      </ul>      
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-button><mat-icon>favorite</mat-icon></button>
+      <button mat-button>SHARE</button>
+    </mat-card-actions>
+</mat-card>
+  

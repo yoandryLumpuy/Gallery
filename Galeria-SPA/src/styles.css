@@ -3,3 +3,25 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.element-center{
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+}
+
+.flex-box{
+    display: flex;
+}
+
+/* override mat-menu-content padding */
+.menu-form-wrapper .mat-menu-content:not(:empty) {
+  padding: 0;
+}
+
+ /* layout for the form */
+.menu-form-wrapper .menu-form {
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+}

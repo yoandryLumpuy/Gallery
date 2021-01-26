@@ -16,5 +16,7 @@
         public const string RoleNamePainter = "Painter";
         public const string RoleNameNormalUser = "NormalUser";
         public const string RoleNameAdmin = "Admin";
+
+        public const int NumberOfTopComments = 10;
     }
 }

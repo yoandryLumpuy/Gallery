@@ -1,3 +1,5 @@
+import { AlertService } from './../../_services/alert.service';
+import { AlertComponent } from './../../_services/alert/alert.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import {MatInputModule} from '@angular/material/input';
 import { AuthService } from './../../_services/auth.service';
@@ -10,28 +12,29 @@ import { Component, OnChanges, OnInit } from '@angular/core';
   styleUrls: ['./navBar.component.css']
 })
 export class NavBarComponent{
-  model : any = {};  
+  model : any = {userName:'', password: ''};  
    
   constructor(private http : HttpClient,
-    public authService : AuthService) { }
+    public authService : AuthService,
+    private alertService: AlertService) { }
 
   login(){
     this.authService.login(this.model)
     .subscribe(res => {
-      //this.alertify.success("successfully logged!");      
+      this.alertService.success("successfully logged!");      
     });
   }
 
   register(){
     this.authService.register(this.model)
     .subscribe(res => {
-      //this.alertify.success("successfully registered!");      
+      this.alertService.success("successfully registered!");          
     });
   }
 
   logout(){
     this.authService.logout();
-    //this.alertify.success("Successfully loggued out!")
+    this.alertService.success("successful loggout!");    
   }
 
 }

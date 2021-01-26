@@ -49,5 +49,47 @@ namespace Galeria_API.Persistence
 
             return await PaginationResult<Picture>.CreateAsync(query, queryObject.Page, queryObject.PageSize);
         }
+
+        public async Task<bool> AddComment(int userId, int pictureId, AddCommentDto commentDto)
+        {
+            try
+            {
+                var pointOfView = _galleryDbContext.PointsOfView.AsQueryable()
+                    .Where(pOv => pOv.UserId == userId && pOv.PictureId == pictureId).FirstOrDefault();
+                var added = pointOfView == null;
+
+                pointOfView = pointOfView ?? new PointOfView()
+                {
+                    Points = commentDto.Points,
+                    Comment = commentDto.Comment,
+                    PictureId = pictureId,
+                    UserId = userId,
+                    AddedDateTime = DateTime.Now
+                };
+                pointOfView.Points = commentDto.Points;
+                pointOfView.Comment = commentDto.Comment;
+                pointOfView.AddedDateTime = DateTime.Now;
+                
+                if (added) await _galleryDbContext.PointsOfView.AddAsync(pointOfView);
+
+                await _galleryDbContext.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+        public async Task<PaginationResult<User>> GetUsers(QueryObject queryObject)
+        {
+            var query = _galleryDbContext.Users.AsQueryable();
+
+            if (queryObject.UserId.HasValue)
+            {
+                query = query.Where(user =>  user.Id == queryObject.UserId.Value);
+            }
+            return await PaginationResult<User>.CreateAsync(query, queryObject.Page, queryObject.PageSize);
+        }
     }
 }

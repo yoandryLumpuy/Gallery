@@ -28,4 +28,8 @@ queryObjectToString(queryObject : any) : string{
   }
   return parts.join('&');
 }
+
+getPictureUrlById(id: number) : string{
+  return environment.baseUrl + 'pictures/'+ id.toString();
+}
 }

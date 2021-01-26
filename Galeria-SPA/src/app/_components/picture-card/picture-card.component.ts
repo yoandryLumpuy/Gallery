@@ -1,3 +1,4 @@
+import { PicturesService } from './../../_services/Pictures.service';
 import { environment } from './../../../environments/environment';
 import { Picture } from './../../_model/picture.interface';
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
@@ -9,26 +10,10 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/cor
 })
 export class PictureCardComponent implements OnInit {
   @Input('picture') picture: Picture;
-  environment: { production: boolean; baseUrl: string; };
-  editingCommentMode : boolean = false;
   commentToPost: any = {};
 
-  constructor() { }  
+  constructor(public picturesService : PicturesService) { }  
 
   ngOnInit() {
-    this.environment = environment;
-  }
-
-  toggleEditingCommentMode(){
-    this.editingCommentMode = !this.editingCommentMode;    
-  }
-
-  submitComment(){
-    this.toggleEditingCommentMode();
-  }
-
-  cancel(){
-    this.commentToPost = {};
-    this.editingCommentMode = false;
-  }
+  } 
 }

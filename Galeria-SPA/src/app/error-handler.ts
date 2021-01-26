@@ -1,9 +1,10 @@
+import { AlertService } from './_services/alert.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ErrorHandler, Injectable } from '@angular/core';
 
 @Injectable({providedIn: 'root'})
 export class MyErrorHandler implements ErrorHandler {
-    constructor(){}
+    constructor(private alertService: AlertService){}
 
     handleError(error: any): void {
         let errorsSummary = '';
@@ -15,7 +16,6 @@ export class MyErrorHandler implements ErrorHandler {
            if (typeof(error.error) == 'string') 
             errorsSummary += error.error;                  
         }        
-        //this.alertify.error();
-        console.log(errorsSummary || error.error?.statusText || 'An error has occured !');
+        this.alertService.error(errorsSummary || error.error?.statusText || 'An error has occured !');        
     }
 }

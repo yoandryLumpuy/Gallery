@@ -15,5 +15,7 @@ namespace Galeria_API.Core.Model
 
         [ValueBetween(Min = 0, Max = 10)]
         public byte Points { get; set; }
+
+        public DateTime AddedDateTime { get; set; }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Galeria_API.Core;
@@ -14,6 +15,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Options;
 
@@ -43,6 +45,9 @@ namespace Galeria_API.Controllers
         public async Task<IActionResult> UploadPicture(int userId, IFormFile file)
 
         {
+            if (userId != int.Parse(User.FindFirst(claim => claim.Type == ClaimTypes.NameIdentifier).Value))
+                return Unauthorized();
+
             var user = await _repository.GetUser(userId);
             if (user == null) return NotFound("User not found!");
 
@@ -53,7 +58,7 @@ namespace Galeria_API.Controllers
             if (file == null) return BadRequest("Null file!");
             if (file.Length == 0) return BadRequest("Empty file");
             if (file.Length > _pictureSetting.Value.MaxBytes) return BadRequest("File size exceeded!");
-            if (_pictureSetting.Value.IsSupported(Path.GetExtension(file.FileName))) return BadRequest("Unsupported file extension!");
+            if (!_pictureSetting.Value.IsSupported(Path.GetExtension(file.FileName))) return BadRequest("Unsupported file extension!");
 
             using (var fileStream = new FileStream(filePath, FileMode.Create))
             {
@@ -103,6 +108,25 @@ namespace Galeria_API.Controllers
         {
             var picturesFromDbContext =  await _repository.GetPictures(queryObject);
             return Ok(_mapper.Map<PaginationResult<PicturesDto>>(picturesFromDbContext));
+        }
+
+        [Authorize(Policy = Constants.PolicyNameOnlyWatch)]
+        [HttpPost("api/users/{userId}/pictures/{pictureId}", Name = "AddComment")]
+        public async Task<IActionResult> AddComment(int userId, int pictureId, [FromBody] AddCommentDto addCommentDto)
+        {
+            if (userId != int.Parse(User.FindFirst(claim => claim.Type == ClaimTypes.NameIdentifier).Value))
+                return Unauthorized();
+
+            var user = await _repository.GetUser(userId);
+            if (user == null) return BadRequest("User doen't exist");
+
+            var picture = await _repository.GetPicture(pictureId);
+            if (picture == null) return BadRequest("Picture doesn't exist!");
+
+            var insertionResult = await _repository.AddComment(userId, pictureId, addCommentDto);
+            if (!insertionResult) BadRequest("Something went wrong adding the comment!");
+            
+            return Ok();
         }
     }
 }

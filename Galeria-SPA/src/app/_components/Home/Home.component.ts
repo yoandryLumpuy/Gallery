@@ -1,3 +1,4 @@
+import { AlertService } from './../../_services/alert.service';
 import { QueryObject } from './../../_model/queryObject.interface';
 import { PicturesService } from './../../_services/Pictures.service';
 import { Picture } from './../../_model/picture.interface';
@@ -20,7 +21,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   };
   subscription: Subscription;
 
-  constructor(private picturesService: PicturesService) { }
+  constructor(private picturesService: PicturesService, private alertService : AlertService) { }
 
   ngOnDestroy(): void {
     if (!!this.subscription) this.subscription.unsubscribe();
@@ -40,4 +41,5 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.picturesService.pictures(this.queryObject).subscribe(
       res => this.paginationResult = res);
   }
+
 }

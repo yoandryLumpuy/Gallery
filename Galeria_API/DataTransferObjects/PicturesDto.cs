@@ -12,5 +12,6 @@ namespace Galeria_API.DataTransferObjects
         public string Name { get; set; }
         public virtual UserForListDto OwnerUser { get; set; }
         public DateTime UploadedDateTime { get; set; }
+        public ICollection<PointOfViewDto> TopPointsOfView { get; set; }
     }
 }

@@ -1,5 +1,5 @@
   
-    <mat-toolbar color="primary" > 
+    <mat-toolbar> 
       <span> Gallery </span>
       <mat-menu #menu="matMenu">        
         <button mat-menu-item>
@@ -10,17 +10,75 @@
           <mat-icon>people</mat-icon>
           <span>Manage Users</span>
         </button>
-        <button mat-menu-item>
+        <button mat-menu-item (click) = "logout()">
           <mat-icon >logout</mat-icon>
           <span>Logout</span>
         </button>
       </mat-menu>  
       <span class="fill-space"></span>
       
-      <span> Welcome Pepe </span>
-      <button mat-icon-button [matMenuTriggerFor] = "menu">
+      <form *ngIf="!(authService.user | async)" (ngSubmit) = "login()">        
+        <mat-form-field 
+         appearance="outline">
+            <mat-label> User Name </mat-label>
+            <input matInput 
+              required
+              name = "userName"
+              [(ngModel)] = "model.userName"
+              required placeholder="User Name"
+              value="">
+            <mat-hint> Type the user </mat-hint>
+            <mat-error> The user is required </mat-error>
+        </mat-form-field>
+
+        <mat-form-field 
+         appearance="outline">
+            <mat-label> Password </mat-label>
+            <input matInput 
+              required 
+              name = "password"
+              [(ngModel)] = "model.password" 
+              type="password"
+              value="">  
+            <mat-hint> Type a strong password </mat-hint>        
+            <mat-error> Password is required </mat-error>
+        </mat-form-field>
+
+        <button mat-raised-button type="submit" > Login </button>
+        <button mat-raised-button type="button" (click) = "register()"> Register </button>
+      </form>
+      <span *ngIf="!!(authService.user | async)"> Welcome {{(authService.user | async)?.userName}} </span>
+
+      <button mat-icon-button [matMenuTriggerFor] = "menu" class="flex-box">
         <mat-icon>more_vert</mat-icon>
       </button>      
     </mat-toolbar>
   
-    
+    <div class="element-center">
+      <button  mat-raised-button [matMenuTriggerFor] = "menu2" >
+        Boton
+      </button>
+    </div>    
+
+    <mat-menu class="menu-form-wrapper" #menu2 ="matMenu" [hasBackdrop]="false">  
+      <div 
+       (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
+          <form class="menu-form">
+            <mat-form-field>
+              <input matInput type="text" placeholder="type here">          
+            </mat-form-field>          
+            <mat-form-field>
+              <textarea matInput [mat-autosize] = "true" placeholder="type here">  
+              </textarea>        
+            </mat-form-field>  
+            <div>
+              <button  mat-raised-button  style="float: inline-start; background-color: cadetblue; margin-top: 2px;">
+                Boton
+              </button>  
+              <button  mat-raised-button  style="float: inline-end; background-color: cadetblue; margin-top: 2px;">
+                Boton 2
+              </button> 
+            </div>     
+          </form>
+      </div>
+    </mat-menu>  

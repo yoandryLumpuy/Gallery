@@ -74,6 +74,8 @@ namespace Galeria_API.Persistence
             //PointOfView
             builder.Entity<PointOfView>()
                 .HasKey(pointsOfView => new { pointsOfView.UserId, pointsOfView.PictureId });
+            builder.Entity<PointOfView>()
+                .Property(pOv => pOv.AddedDateTime).IsRequired();
 
             builder.Entity<PointOfView>(pointOfView =>
             {

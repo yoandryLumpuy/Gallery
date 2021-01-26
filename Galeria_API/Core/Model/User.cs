@@ -10,6 +10,7 @@ namespace Galeria_API.Core.Model
 {
     public class User : IdentityUser<int>
     {
+        public string PhotoUrl { get; set; }
         public virtual ICollection<UserRole> UserRoles { get; set; }
         public virtual ICollection<Picture> Pictures { get; set; }
         public virtual ICollection<UserLikesPicture> UserLikesPicture { get; set; }
