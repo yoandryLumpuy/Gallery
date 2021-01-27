@@ -1,3 +1,10 @@
-
+<mat-grid-list cols="5" rowHeight="200px" [gutterSize] = "2">
+    <mat-grid-tile
+        *ngFor="let pic of picturesList"
+        [colspan]="1"
+        [rowspan]="1">
+       <app-picture-card [picture] = "pic"></app-picture-card>
+    </mat-grid-tile>
+</mat-grid-list>
 
 

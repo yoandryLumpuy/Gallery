@@ -1,3 +1,7 @@
+import { AlertService } from './alert.service';
+import { Router } from '@angular/router';
+import { AuthService } from './auth.service';
+import { AuthGuardService } from './../_guards/authGuard.service';
 import { PaginationResult } from './../_model/paginationResult.interface';
 import { environment } from './../../environments/environment';
 import { Observable } from 'rxjs';
@@ -10,7 +14,8 @@ import { Injectable } from '@angular/core';
 })
 export class ManageUsersService {
 
-constructor(private http: HttpClient) { }
+constructor(private http: HttpClient, private authService: AuthService, 
+  private router : Router, private alertService: AlertService) { }
 
 getUsers(): Observable<PaginationResult<User>>{
   return this.http.get<PaginationResult<User>>(environment.baseUrl + 'users');
@@ -32,7 +37,16 @@ getUrlForUserPhoto(userId : number): string{
   return environment.baseUrl + 'users/' + userId.toString() + '/photo';
 }
 
-uploadProfilePhoto(userId : number){
-  // var url = 
+uploadProfilePhoto(file : any){
+  if (!this.authService.loggedIn) {
+    this.router.navigate(['/']);
+    this.alertService.error("Please log in!");
+    return;
+  };
+
+   var decodedToken = this.authService.decodedToken;
+   var formData = new FormData(); 
+   formData.append('file', file);
+   return this.http.post(`${environment.baseUrl}users/${decodedToken.nameid}/photo`, file);
 }
 }

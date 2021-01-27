@@ -6,4 +6,6 @@ export interface Picture {
     ownerUser: User,
     uploadedDateTime: Date
     topPointsOfView : PointOfView[];
+    youLikeIt : boolean;
+    yourComment : PointOfView;
 } 

@@ -52,33 +52,6 @@
       <button mat-icon-button [matMenuTriggerFor] = "menu" class="flex-box">
         <mat-icon>more_vert</mat-icon>
       </button>      
-    </mat-toolbar>
-  
-    <div class="element-center">
-      <button  mat-raised-button [matMenuTriggerFor] = "menu2" >
-        Boton
-      </button>
-    </div>    
+    </mat-toolbar>  
 
-    <mat-menu class="menu-form-wrapper" #menu2 ="matMenu" [hasBackdrop]="false">  
-      <div 
-       (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
-          <form class="menu-form">
-            <mat-form-field>
-              <input matInput type="text" placeholder="type here">          
-            </mat-form-field>          
-            <mat-form-field>
-              <textarea matInput [mat-autosize] = "true" placeholder="type here">  
-              </textarea>        
-            </mat-form-field>  
-            <div>
-              <button  mat-raised-button  style="float: inline-start; background-color: cadetblue; margin-top: 2px;">
-                Boton
-              </button>  
-              <button  mat-raised-button  style="float: inline-end; background-color: cadetblue; margin-top: 2px;">
-                Boton 2
-              </button> 
-            </div>     
-          </form>
-      </div>
-    </mat-menu>  
+    

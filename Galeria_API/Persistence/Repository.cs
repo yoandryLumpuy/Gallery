@@ -6,6 +6,7 @@ using Galeria_API.Core;
 using Galeria_API.Core.Model;
 using Galeria_API.DataTransferObjects;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Galeria_API.Persistence
@@ -50,7 +51,7 @@ namespace Galeria_API.Persistence
             return await PaginationResult<Picture>.CreateAsync(query, queryObject.Page, queryObject.PageSize);
         }
 
-        public async Task<bool> AddComment(int userId, int pictureId, AddCommentDto commentDto)
+        public async Task<Picture> AddComment(int userId, int pictureId, AddCommentDto commentDto)
         {
             try
             {
@@ -73,11 +74,11 @@ namespace Galeria_API.Persistence
                 if (added) await _galleryDbContext.PointsOfView.AddAsync(pointOfView);
 
                 await _galleryDbContext.SaveChangesAsync();
-                return true;
+                return await GetPicture(pictureId);
             }
             catch (Exception e)
             {
-                return false;
+                return null;
             }
         }
 
@@ -90,6 +91,41 @@ namespace Galeria_API.Persistence
                 query = query.Where(user =>  user.Id == queryObject.UserId.Value);
             }
             return await PaginationResult<User>.CreateAsync(query, queryObject.Page, queryObject.PageSize);
+        }
+
+        public async Task<bool> AddToFavorite(int userId, int pictureId)
+        {
+            try
+            {
+                var favorite = await _galleryDbContext.UserLikes
+                        .FirstOrDefaultAsync(fav => fav.UserId == userId && fav.PictureId == pictureId);
+
+                if (favorite != null) return false;
+
+                await _galleryDbContext.UserLikes.AddAsync(new UserLikesPicture()
+                {
+                    UserId = userId,
+                    PictureId = pictureId
+                });
+
+                await _galleryDbContext.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> YouLikeIt(int userId, int pictureId)
+        {
+            return await _galleryDbContext.UserLikes.AnyAsync(userLikes =>
+                userLikes.UserId == userId && userLikes.PictureId == pictureId);
+        }
+
+        public async Task<PointOfView> YourComment(int userId, int pictureId)
+        {
+            return await _galleryDbContext.PointsOfView.SingleOrDefaultAsync(pOv => pOv.UserId == userId && pOv.PictureId == pictureId);
         }
     }
 }
