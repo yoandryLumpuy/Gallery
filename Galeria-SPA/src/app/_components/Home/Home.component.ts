@@ -1,3 +1,4 @@
+import { PageEvent } from '@angular/material/paginator';
 import { AlertService } from './../../_services/alert.service';
 import { QueryObject } from './../../_model/queryObject.interface';
 import { PicturesService } from './../../_services/Pictures.service';
@@ -11,35 +12,41 @@ import { Subscription } from 'rxjs';
   templateUrl: './Home.component.html',
   styleUrls: ['./Home.component.css']
 })
-export class HomeComponent implements OnInit, OnDestroy {
-  paginationResult : PaginationResult<Picture>;
+export class HomeComponent {
+  paginationResult : PaginationResult<Picture> = {
+    totalPages: 0,
+    items: [],
+    page: 0,
+    pageSize: 0,
+    totalItems: 0
+  };
+  
   queryObject : QueryObject = {
     page: 1,
     pageSize: 5,
     sortBy: 'UpdatedDateTime',
     isSortAscending: false
   };
-  subscription: Subscription;
+  picture : Picture;
 
-  constructor(private picturesService: PicturesService, private alertService : AlertService) { }
+  constructor(private picturesService: PicturesService, private alertService : AlertService) {
+    this.getPictures();
+   }
 
-  ngOnDestroy(): void {
-    if (!!this.subscription) this.subscription.unsubscribe();
-  }
-
-  ngOnInit() {
+  onPageChanged($event: PageEvent){    
+    console.log($event);
+    this.queryObject.page = $event.pageIndex;
+    this.queryObject.pageSize = $event.pageSize;
     this.getPictures();
   }
 
-  pageChanged($event: number){
-    this.queryObject.page = $event;
-    this.getPictures();
+  getPictures(){    
+    var subscription: Subscription 
+      = this.picturesService.pictures(this.queryObject).subscribe(
+        res => this.paginationResult = res,
+        null,
+        () => {
+          subscription.unsubscribe();
+        });
   }
-
-  getPictures(){
-    if (!!this.subscription) this.subscription.unsubscribe();
-    this.picturesService.pictures(this.queryObject).subscribe(
-      res => this.paginationResult = res);
-  }
-
 }

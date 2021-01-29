@@ -73,11 +73,11 @@ namespace Galeria_API.Controllers
             await _unitOfWork.CompleteAsync();
 
             var pictureDto = _mapper.Map<Picture, PicturesDto>(pic, 
-                opt => opt.AfterMap(async (source, destiny) =>
+                opt => opt.AfterMap(async (source, target) =>
                 {
-                    destiny.YouLikeIt = await _repository.YouLikeIt(invokingUserId, destiny.Id);
-                    destiny.YourComment
-                        = _mapper.Map<PointOfViewDto>(await _repository.YourComment(invokingUserId, destiny.Id));
+                    target.YouLikeIt = await _repository.YouLikeIt(invokingUserId, target.Id);
+                    target.YourComment
+                        = _mapper.Map<PointOfViewDto>(await _repository.YourComment(invokingUserId, target.Id));
                 }));
 
             return CreatedAtRoute("GetPicture",new {Controller = "Pictures", id = pic.Id}, pictureDto);
@@ -112,9 +112,9 @@ namespace Galeria_API.Controllers
             var invokingUserId = int.Parse(User.FindFirst(claim => claim.Type == ClaimTypes.NameIdentifier).Value);
             var picturesFromDbContext =  await _repository.GetPictures(queryObject);
             var mapping = _mapper.Map<PaginationResult<Picture>, PaginationResult<PicturesDto>>(picturesFromDbContext, 
-                opt => opt.AfterMap((source, destiny) =>
+                opt => opt.AfterMap((source, target) =>
                 {
-                    destiny.Items.ForEach(
+                    target.Items.ForEach(
                         async picDto =>
                         {
                             picDto.YouLikeIt = await _repository.YouLikeIt(invokingUserId, picDto.Id);
@@ -143,22 +143,22 @@ namespace Galeria_API.Controllers
             if (pictureModified == null) return BadRequest("Something went wrong when adding the comment!");
 
             var pictureDto = _mapper.Map<Picture, PicturesDto>(pictureModified,
-                opt => opt.AfterMap(async (source, destiny) =>
+                opt => opt.AfterMap(async (source, target) =>
                 {
-                    destiny.YouLikeIt = await _repository.YouLikeIt(invokingUserId, destiny.Id);
-                    destiny.YourComment
-                        = _mapper.Map<PointOfViewDto>(await _repository.YourComment(invokingUserId, destiny.Id));
+                    target.YouLikeIt = await _repository.YouLikeIt(invokingUserId, target.Id);
+                    target.YourComment
+                        = _mapper.Map<PointOfViewDto>(await _repository.YourComment(invokingUserId, target.Id));
                 }));
 
             return Ok(pictureDto);
         }
 
         [Authorize(Policy = Constants.PolicyNameOnlyWatch)]
-        [HttpPost("api/user/{userId}/picture/{pictureId}/favorite", Name = "AddToFavorite")]
-        public async Task<IActionResult> AddToFavorite(int userId, int pictureId)
+        [HttpPost("api/user/{userId}/picture/{pictureId}/favorite", Name = "ModifyFavorites")]
+        public async Task<IActionResult> ModifyFavorites(int userId, int pictureId)
         {
-            if (userId != int.Parse(User.FindFirst(claim => claim.Type == ClaimTypes.NameIdentifier).Value))
-                return Unauthorized();
+            var invokingUserId = int.Parse(User.FindFirst(claim => claim.Type == ClaimTypes.NameIdentifier).Value);
+            if (userId != invokingUserId) return Unauthorized();
 
             var user = await _repository.GetUser(userId);
             if (user == null) return BadRequest("User doen't exist");
@@ -166,18 +166,26 @@ namespace Galeria_API.Controllers
             var picture = await _repository.GetPicture(pictureId);
             if (picture == null) return BadRequest("Picture doesn't exist!");
             
-            var insertionResult = await _repository.AddToFavorite(userId, pictureId);
-            if (!insertionResult) return BadRequest("Something went wrong when adding to favorite!. Favorite already exists!");
+            var pic = await _repository.ModifyFavorites(userId, pictureId);
+            if (pic == null) return BadRequest("Something went wrong when modifying favorites!.");
 
-            return Ok();
+            var pictureDto = _mapper.Map<Picture, PicturesDto>(pic,
+                opt => opt.AfterMap(async (source, target) =>
+                {
+                    target.YouLikeIt = await _repository.YouLikeIt(invokingUserId, target.Id);
+                    target.YourComment
+                        = _mapper.Map<PointOfViewDto>(await _repository.YourComment(invokingUserId, target.Id));
+                }));
+
+            return Ok(pictureDto);
         }
 
         [Authorize(Policy = Constants.PolicyNameOnlyWatch)]
         [HttpDelete("api/user/{userId}/picture/{pictureId}/comment", Name = "Uncomment")]
         public async Task<IActionResult> Uncomment(int userId, int pictureId)
         {
-            if (userId != int.Parse(User.FindFirst(claim => claim.Type == ClaimTypes.NameIdentifier).Value))
-                return Unauthorized();
+            var invokingUserId = int.Parse(User.FindFirst(claim => claim.Type == ClaimTypes.NameIdentifier).Value);
+            if (userId != invokingUserId) return Unauthorized();
 
             var user = await _repository.GetUser(userId);
             if (user == null) return BadRequest("User doen't exist");
@@ -185,10 +193,18 @@ namespace Galeria_API.Controllers
             var picture = await _repository.GetPicture(pictureId);
             if (picture == null) return BadRequest("Picture doesn't exist!");
 
-            //var insertionResult = await _repository.Uncomment(userId, pictureId);
-            //if (!insertionResult) return BadRequest("Something went wrong adding the comment!");
+            var pic = await _repository.Uncomment(userId, pictureId);
+            if (pic == null) return BadRequest("Something went wrong when removing the comment!");
 
-            return Ok();
+            var pictureDto = _mapper.Map<Picture, PicturesDto>(pic,
+                opt => opt.AfterMap(async (source, target) =>
+                {
+                    target.YouLikeIt = await _repository.YouLikeIt(invokingUserId, target.Id);
+                    target.YourComment
+                        = _mapper.Map<PointOfViewDto>(await _repository.YourComment(invokingUserId, target.Id));
+                }));
+
+            return Ok(pictureDto);
         }
     }
 }

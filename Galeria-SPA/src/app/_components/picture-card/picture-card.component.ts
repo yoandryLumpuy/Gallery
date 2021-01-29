@@ -50,5 +50,20 @@ export class PictureCardComponent implements OnInit {
 
   closeMenu(){
     this.menuTrigger.closeMenu();
+  }  
+
+  modifyFavorites(){
+    var observ = this.picturesService.modifyFavorite(this.picture.id); 
+    if (!!observ)  
+      var subscription: Subscription = observ.subscribe(
+        res => {
+          this.picture = res;
+          this.alertService.success(`Successfully ${this.picture.youLikeIt 
+            ? 'added to favorites' : 'removed from favorites'}`);
+        },
+        error => {
+          this.alertService.error("Error while modifying favorites!");
+        },
+        () => subscription.unsubscribe());
   }
 }

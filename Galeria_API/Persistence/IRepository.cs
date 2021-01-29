@@ -15,11 +15,13 @@ namespace Galeria_API.Persistence
 
         Task<PaginationResult<Picture>> GetPictures(QueryObject queryObject);
         Task<PaginationResult<User>> GetUsers(QueryObject queryObject);
-
-        Task<Picture> AddComment(int userId, int pictureId, AddCommentDto commentDto);
-        Task<bool> AddToFavorite(int userId, int pictureId);
-
+        
         Task<bool> YouLikeIt(int userId, int pictureId);
         Task<PointOfView> YourComment(int userId, int pictureId);
+
+        Task<Picture> AddComment(int userId, int pictureId, AddCommentDto commentDto);
+        Task<Picture> Uncomment(int userId, int pictureId);
+
+        Task<Picture> ModifyFavorites(int userId, int pictureId);
     }
 }

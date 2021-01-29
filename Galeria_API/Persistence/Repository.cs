@@ -82,6 +82,51 @@ namespace Galeria_API.Persistence
             }
         }
 
+        public async Task<Picture> Uncomment(int userId, int pictureId)
+        {
+            try
+            {
+                var pointOfView = _galleryDbContext.PointsOfView.AsQueryable()
+                    .Where(pOv => pOv.UserId == userId && pOv.PictureId == pictureId)
+                    .FirstOrDefault();
+                if (pointOfView == null) return null;
+
+                _galleryDbContext.PointsOfView.Remove(pointOfView);
+                
+                await _galleryDbContext.SaveChangesAsync();
+                return await GetPicture(pictureId);
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
+        public async Task<Picture> ModifyFavorites(int userId, int pictureId)
+        {
+            try
+            {
+                var favorite = await _galleryDbContext.UserLikes
+                    .FirstOrDefaultAsync(fav => fav.UserId == userId && fav.PictureId == pictureId);
+
+                if (favorite == null)
+                    await _galleryDbContext.UserLikes.AddAsync(new UserLikesPicture()
+                    {
+                        UserId = userId,
+                        PictureId = pictureId
+                    });
+                else
+                    _galleryDbContext.UserLikes.Remove(favorite);
+
+                await _galleryDbContext.SaveChangesAsync();
+                return await GetPicture(pictureId);
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
         public async Task<PaginationResult<User>> GetUsers(QueryObject queryObject)
         {
             var query = _galleryDbContext.Users.AsQueryable();
@@ -92,31 +137,7 @@ namespace Galeria_API.Persistence
             }
             return await PaginationResult<User>.CreateAsync(query, queryObject.Page, queryObject.PageSize);
         }
-
-        public async Task<bool> AddToFavorite(int userId, int pictureId)
-        {
-            try
-            {
-                var favorite = await _galleryDbContext.UserLikes
-                        .FirstOrDefaultAsync(fav => fav.UserId == userId && fav.PictureId == pictureId);
-
-                if (favorite != null) return false;
-
-                await _galleryDbContext.UserLikes.AddAsync(new UserLikesPicture()
-                {
-                    UserId = userId,
-                    PictureId = pictureId
-                });
-
-                await _galleryDbContext.SaveChangesAsync();
-                return true;
-            }
-            catch (Exception e)
-            {
-                return false;
-            }
-        }
-
+        
         public async Task<bool> YouLikeIt(int userId, int pictureId)
         {
             return await _galleryDbContext.UserLikes.AnyAsync(userLikes =>

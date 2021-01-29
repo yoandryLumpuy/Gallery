@@ -1,10 +1,10 @@
+import { Picture } from './../_model/picture.interface';
 import { CommentRequest } from './../_model/request-comment.interface';
 import { AuthService } from './auth.service';
 import { PaginationResult } from './../_model/paginationResult.interface';
 import { QueryObject } from './../_model/queryObject.interface';
 import { environment } from './../../environments/environment';
 import { Injectable } from '@angular/core';
-import { Picture } from '../_model/picture.interface';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { AlertService } from './alert.service';
@@ -19,7 +19,8 @@ constructor(private http : HttpClient, private authService: AuthService,
   private router : Router, private alertService: AlertService) { }
 
 pictures(queryObject: QueryObject) : Observable<PaginationResult<Picture>>{              
-  return this.http.get<PaginationResult<Picture>>(environment.baseUrl + "pictures?"+ this.queryObjectToString(queryObject));
+  return this.http.get<PaginationResult<Picture>>(environment.baseUrl + "pictures?"+ this.queryObjectToString(queryObject), 
+              {reportProgress: true});
 }
 
 queryObjectToString(queryObject : any) : string{
@@ -62,7 +63,18 @@ addComment(pictureId: number, commentRequest : CommentRequest){
   return this.http.post<Picture>(`${environment.baseUrl}user/${decodedToken.nameid}/picture/${pictureId}/comment`, commentRequest);
 }
 
-markAsFavorite(pictureId: number){
+uncomment(pictureId: number){
+  if (!this.authService.loggedIn) {
+    this.router.navigate(['/']);
+    this.alertService.error("Please log in!");
+    return null;
+  };
+
+  var decodedToken = this.authService.decodedToken;
+  return this.http.delete<Picture>(`${environment.baseUrl}user/${decodedToken.nameid}/picture/${pictureId}/comment`);
+}
+
+modifyFavorite(pictureId: number){
   if (!this.authService.loggedIn) {
     this.router.navigate(['/']);
     this.alertService.error("Please log in!");
@@ -70,6 +82,6 @@ markAsFavorite(pictureId: number){
   };
   
   var decodedToken = this.authService.decodedToken;
-  return this.http.post(`${environment.baseUrl}user/${decodedToken.nameid}/picture/${pictureId}/favorite`, {});
+  return this.http.post<Picture>(`${environment.baseUrl}user/${decodedToken.nameid}/picture/${pictureId}/favorite`, {});
 }
 }

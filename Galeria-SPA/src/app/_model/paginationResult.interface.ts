@@ -1,5 +1,3 @@
-import { Picture } from './picture.interface';
-
 export interface PaginationResult<T>{
     totalItems: number;
     page : number;

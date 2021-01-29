@@ -1,4 +1,9 @@
 
-
-<app-paginator class="element-center"></app-paginator>
-
+<app-pictures-list [pictures-list] = "paginationResult.items"></app-pictures-list>
+<mat-paginator style="margin: auto;"
+    [length] = "paginationResult.totalItems"
+    [pageSize] = "paginationResult.pageSize"
+    [pageSizeOptions] = "[5, 10, 15, 20]"
+    [pageIndex] = "paginationResult.page"
+    (page) = "onPageChanged($event)"
+></mat-paginator>

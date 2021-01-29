@@ -1,3 +1,4 @@
+import { StringsLimitedPipe } from './_pipes/strings-limited.pipe';
 import { ConfirmDialogComponent } from './_services/confirm-dialog/confirm-dialog.component';
 import { AlertComponent } from './_services/alert/alert.component';
 import { AdminListOfUsersComponent } from './_components/AdminListOfUsers/AdminListOfUsers.component';
@@ -16,11 +17,11 @@ import { NavBarComponent } from './_components/navBar/navBar.component';
 import { UserWithRolesDirective } from './_directives/userWithRoles.directive';
 import { appRoutingModule } from './app-routing.module';
 import { AuthInterceptorService } from './_services/authInterceptor.service';
-import { PaginatorComponent } from './_components/pagination/pagination.component';
 
 import {MatModule} from './_modules/mat.module';
 
 import { MAT_SNACK_BAR_DATA, MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
+import { UploadProgressInterceptorService } from './_services/upload-progress-interceptor.service';
 
 @NgModule({
   declarations: [				
@@ -31,9 +32,9 @@ import { MAT_SNACK_BAR_DATA, MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/mate
       UserWithRolesDirective,
       HomeComponent,
       AdminListOfUsersComponent, 
-      PaginatorComponent,
       AlertComponent, 
-      ConfirmDialogComponent
+      ConfirmDialogComponent,
+      StringsLimitedPipe
    ],
   imports: [
     BrowserModule, 
@@ -49,6 +50,11 @@ import { MAT_SNACK_BAR_DATA, MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/mate
     {
       provide: HTTP_INTERCEPTORS, 
       useClass: AuthInterceptorService, 
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: UploadProgressInterceptorService,
       multi: true
     },
     {provide: MAT_SNACK_BAR_DATA, useValue: {}}

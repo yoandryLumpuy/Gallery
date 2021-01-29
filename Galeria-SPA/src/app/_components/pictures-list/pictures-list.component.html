@@ -1,4 +1,6 @@
-<mat-grid-list cols="5" rowHeight="200px" [gutterSize] = "2">
+<mat-grid-list
+  #grid = "matGridList" [cols]="breakpoint" 
+  rowHeight="700px" gutterSize = "20" (window:resize)="onResize($event)">
     <mat-grid-tile
         *ngFor="let pic of picturesList"
         [colspan]="1"
@@ -6,5 +8,7 @@
        <app-picture-card [picture] = "pic"></app-picture-card>
     </mat-grid-tile>
 </mat-grid-list>
+
+
 
 

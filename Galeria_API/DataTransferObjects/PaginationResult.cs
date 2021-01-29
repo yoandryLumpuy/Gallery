@@ -30,8 +30,9 @@ namespace Galeria_API.DataTransferObjects
 
         public static async Task<PaginationResult<T>> CreateAsync(IQueryable<T> queryable, int page, byte pageSize)
         {
+            //make a cero-based pagination
             var count = await queryable.CountAsync();
-            var items = await queryable.Skip((page - 1)*pageSize).Take(pageSize).ToListAsync();
+            var items = await queryable.Skip(page*pageSize).Take(pageSize).ToListAsync();
             return new PaginationResult<T>(items, count, page, pageSize);
         }
     }
