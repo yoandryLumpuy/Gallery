@@ -1,3 +1,4 @@
+import { AuthService } from './../../_services/auth.service';
 import { PageEvent } from '@angular/material/paginator';
 import { AlertService } from './../../_services/alert.service';
 import { QueryObject } from './../../_model/queryObject.interface';
@@ -12,7 +13,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './Home.component.html',
   styleUrls: ['./Home.component.css']
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit{
   paginationResult : PaginationResult<Picture> = {
     totalPages: 0,
     items: [],
@@ -24,14 +25,19 @@ export class HomeComponent {
   queryObject : QueryObject = {
     page: 1,
     pageSize: 5,
-    sortBy: 'UpdatedDateTime',
+    sortBy: 'UploadedDateTime',
     isSortAscending: false
   };
-  picture : Picture;
 
-  constructor(private picturesService: PicturesService, private alertService : AlertService) {
-    this.getPictures();
-   }
+
+  constructor(private picturesService: PicturesService, private alertService : AlertService, 
+    private authService: AuthService) {}
+
+  ngOnInit(): void {
+    this.authService.user.subscribe(
+      user => this.getPictures()
+    );
+  }
 
   onPageChanged($event: PageEvent){    
     console.log($event);

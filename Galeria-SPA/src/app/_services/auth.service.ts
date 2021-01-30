@@ -37,10 +37,10 @@ export class AuthService {
 
   login(model : {userName: string; password: string}){
     return this.http.post<{token : string; user: User}>(environment.baseUrl + 'auth/login', model)
-           .pipe(tap(res => {
-             this.user.next(res.user);
+           .pipe(tap(res => {             
              localStorage.setItem('token', res.token); 
              localStorage.setItem('user', JSON.stringify(res.user));  
+             this.user.next(res.user);
              this.autologout();                         
             }));
   }
@@ -50,10 +50,10 @@ export class AuthService {
            .pipe(switchMap(res => this.login(model)));
   }
 
-  logout(){
-    this.user.next(undefined);
+  logout(){    
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    this.user.next(undefined);
     this.router.navigate(['/']);
     if (!!this.timeoutTimer) clearTimeout(this.timeoutTimer);
   }
