@@ -9,3 +9,9 @@ export interface QueryObject{
     pageSize: number;        
     page: number;
 }
+
+export const defaultQueryObject: QueryObject 
+ = {
+    page: 0,
+    pageSize: 10
+  }

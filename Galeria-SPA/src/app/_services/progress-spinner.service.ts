@@ -5,13 +5,13 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class ProgressSpinnerService {
-uploadProgress: Subject<number> = new Subject();
+  uploadProgress: Subject<number> = new Subject();
 
-constructor() { }
+  constructor() { }
 
-updateProgress(param : any){
-  this.uploadProgress.next(param);
-}
+  updateProgress(param : any){
+    this.uploadProgress.next(param);
+  }
 }
 
 

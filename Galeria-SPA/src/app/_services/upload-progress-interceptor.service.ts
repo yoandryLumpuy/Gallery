@@ -15,8 +15,9 @@ constructor(private  progressSpinnerService : ProgressSpinnerService, private ng
       // only intercept when the request is configured to report its progress
       return next.handle(req).pipe(
         tap((event: HttpEvent<any>) => {
-          if (event.type === HttpEventType.UploadProgress) {
-            this.progressSpinnerService.updateProgress(event.total != undefined 
+          if (event.type === HttpEventType.UploadProgress || event.type === HttpEventType.DownloadProgress) {
+            this.progressSpinnerService.updateProgress(
+              event.loaded != undefined && event.total != undefined 
               ? Math.round(event.loaded / event.total * 100) 
               : 100);
           } else if (event.type === HttpEventType.Response) {

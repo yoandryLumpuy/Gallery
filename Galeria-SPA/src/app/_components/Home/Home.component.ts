@@ -1,10 +1,10 @@
 import { AuthService } from './../../_services/auth.service';
 import { PageEvent } from '@angular/material/paginator';
 import { AlertService } from './../../_services/alert.service';
-import { QueryObject } from './../../_model/queryObject.interface';
+import { QueryObject, defaultQueryObject } from './../../_model/queryObject.interface';
 import { PicturesService } from './../../_services/Pictures.service';
 import { Picture } from './../../_model/picture.interface';
-import { PaginationResult } from './../../_model/paginationResult.interface';
+import { defaultPaginationResult, PaginationResult } from './../../_model/paginationResult.interface';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 
@@ -14,17 +14,10 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./Home.component.css']
 })
 export class HomeComponent implements OnInit{
-  paginationResult : PaginationResult<Picture> = {
-    totalPages: 0,
-    items: [],
-    page: 0,
-    pageSize: 0,
-    totalItems: 0
-  };
+  paginationResult : PaginationResult<Picture> = defaultPaginationResult;
   
   queryObject : QueryObject = {
-    page: 1,
-    pageSize: 5,
+    ...defaultQueryObject,
     sortBy: 'UploadedDateTime',
     isSortAscending: false
   };
