@@ -15,10 +15,16 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class AdminListOfUsersComponent implements OnInit, OnDestroy {
   availableRoles : string[];
+
   subscription : Subscription;
   subscriptionToUsers : Subscription;
+  subscriptionToProgressSpinner : Subscription;
+
+  isLoadingOrUploading = false;
+
   paginationResult : PaginationResult<User> = defaultPaginationResult;
   queryObject : QueryObject = defaultQueryObject;  
+  showProgressSpinner = false;
 
   displayedColumns: string[] = ['id', 'userName', 'roles'];
   dataSource = new MatTableDataSource(this.paginationResult.items);  
@@ -29,6 +35,7 @@ export class AdminListOfUsersComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     if (!!this.subscription) this.subscription.unsubscribe();
     if (!!this.subscriptionToUsers) this.subscriptionToUsers.unsubscribe();
+    if (this.subscriptionToProgressSpinner) this.subscriptionToProgressSpinner.unsubscribe();
   }
 
   ngOnInit() {
@@ -37,13 +44,20 @@ export class AdminListOfUsersComponent implements OnInit, OnDestroy {
      );
      this.subscriptionToUsers = this.manageUsersService.getUsers(this.queryObject).subscribe(
        res => this.paginationResult = res
-     ); 
+     );
+     this.subscriptionToProgressSpinner =
+      this.progressSpinnerService.uploadProgress.subscribe(
+        res => {
+          this.isLoadingOrUploading = !!res && res < 100;
+        }
+      ); 
   } 
   
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
+
 }
 
 

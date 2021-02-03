@@ -6,7 +6,7 @@
 
   <div class="example-container mat-elevation-z8">
     <div class="example-loading-shade"
-         *ngIf="(progressSpinnerService.uploadProgress | async) && (progressSpinnerService.uploadProgress | async) < 100">
+         *ngIf="isLoadingOrUploading">
       <mat-spinner 
          [value] = "(progressSpinnerService.uploadProgress | async)"></mat-spinner>      
     </div>
